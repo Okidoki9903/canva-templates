@@ -13,26 +13,23 @@ Convention Centre).
 | `templates/05-speakers.pptx` | Speakers |
 | `templates/06-graduations-best-step.pptx` | Graduations (BEST / STEP) |
 
-Each template has 5 scenes: **Opener → Video + lower third → Video + name card →
-Video + quote/caption → Outro (event info + partners)**.
+Each template has 6 pages: **animated intro (MP4, kinetic typography) → clip + headline →
+clip + name card → clip + big statement → clean clip → animated outro (MP4)**.
+The intros/outros are rendered by `motion.py` and live in `motion/`.
 
 ## How to use in Canva
 
-1. Open the template, then **File → Make a copy** (keep the original clean).
-2. **Upload** your clips (Uploads tab).
-3. **Drag a clip onto the “DROP YOUR VIDEO HERE” image** – it replaces it and
-   keeps the dark gradient and captions on top. Use *Trim* to pick the part you want.
-   (The opener/outro backgrounds can be replaced by video the same way.)
-4. Click any text to edit it (titles, names, quotes…).
-5. Set the length of each scene with the ⏱ timing button above the timeline.
-6. Add music: **Elements → Audio** (or upload your own track) and drop it on the timeline.
-7. Optional: add transitions between scenes (hover between two pages → *Add transition*),
-   and replace the text logos with the real CASA / FOA logo files.
-8. **Share → Download → MP4 Video**.
+1. Open the template, then **File → Make a copy**.
+2. Upload your clips, then **drag each clip onto a “DROP YOUR CLIP HERE” image**.
+   Video pages automatically take the clip's length; trim with *Trim*.
+3. Click the texts to edit them (headline, names, statement).
+4. Logos: **Brand → Logos** and drag the CASA / FOA logos onto the corner tag or the outro.
+5. Add music (Elements → Audio or your own track). Cuts in the intro are on a ~120 BPM grid.
+6. Duplicate clip pages as needed, then **Share → Download → MP4**.
 
 ## Rebuilding
 
 ```
-pip install python-pptx pillow
-python3 build_templates.py
+pip install python-pptx pillow numpy imageio-ffmpeg
+python3 motion.py && python3 build_templates.py
 ```
