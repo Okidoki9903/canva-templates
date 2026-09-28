@@ -228,7 +228,7 @@ def scene_opener(prs, t, a):
     add_text(s, 70, 330, 940, 40, THEME, 22, t["accent"], bold=True, spacing=5)
     add_text(s, 70, 380, 940, 200, ["16TH AFRICAN", "ECONOMIC SUMMIT"], 58, WHITE,
              bold=True, font=FONT_HEAD, line_spacing=1.0)
-    add_text(s, 70, 540, 300, 40, "CANADA 2026", 26, SOFT, bold=True, spacing=8)
+    add_text(s, 70, 540, 600, 40, "CANADA 2026", 26, SOFT, bold=True, spacing=8)
 
     add_rect(s, 70, 760, 140, 10, t["accent"])
     add_text(s, 70, 800, 960, 420, t["title_lines"], t.get("title_size", 150), t["accent"],
@@ -308,7 +308,7 @@ TEMPLATES = [
     dict(
         slug="01-day-1", name="AES 2026 – Day 1 (Video Template)", accent=GOLD,
         title_lines=["DAY 1"], title_size=230,
-        subtitle="Opening Day Highlights  ·  Tuesday, 30 September",
+        subtitle="Opening Day Highlights",
         bug="DAY 1 HIGHLIGHTS",
         lt_kicker="OPENING CEREMONY", lt_title="Add your headline here",
         lt_sub="Short description of this moment",
