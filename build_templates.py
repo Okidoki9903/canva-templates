@@ -219,6 +219,12 @@ def event_footer(slide, accent, y):
     add_text(slide, 100, y + 42, 900, 40, VENUE + ", TORONTO", 24, SOFT, spacing=2)
 
 
+def fit_size(lines, max_size, width=930):
+    """Largest font size (px) that keeps the longest all-caps line inside `width`."""
+    longest = max(len(l) for l in lines)
+    return min(max_size, int(width / (0.75 * longest)))
+
+
 # ---------------------------------------------------------------- scenes
 
 def scene_opener(prs, t, a):
@@ -231,7 +237,7 @@ def scene_opener(prs, t, a):
     add_text(s, 70, 540, 600, 40, "CANADA 2026", 26, SOFT, bold=True, spacing=8)
 
     add_rect(s, 70, 760, 140, 10, t["accent"])
-    add_text(s, 70, 800, 960, 420, t["title_lines"], t.get("title_size", 150), t["accent"],
+    add_text(s, 70, 800, 960, 420, t["title_lines"], fit_size(t["title_lines"], t.get("title_size", 150)), t["accent"],
              bold=True, font=FONT_HEAD, line_spacing=0.95)
     add_text(s, 70, 1230, 940, 140, t["subtitle"], 40, WHITE, line_spacing=1.1)
 
@@ -282,9 +288,11 @@ def scene_outro(prs, t, a):
     s = prs.slides.add_slide(prs.slide_layouts[6])
     add_image(s, a["glow"])
     brand_header(s, t["accent"])
-    add_text(s, 70, 420, 940, 330, t["outro_lines"], 120, WHITE, bold=True, font=FONT_HEAD,
+    size = fit_size(t["outro_lines"], 120)
+    add_text(s, 70, 300, 940, 430, t["outro_lines"], size, WHITE, bold=True, font=FONT_HEAD,
              line_spacing=0.95)
-    add_text(s, 70, 760, 940, 120, t["outro_sub"], 38, t["accent"], bold=True, line_spacing=1.1)
+    sub_y = 300 + len(t["outro_lines"]) * size * 1.14 + 30
+    add_text(s, 70, sub_y, 940, 120, t["outro_sub"], 38, t["accent"], bold=True, line_spacing=1.1)
     add_rect(s, 70, 930, 940, 3, SOFT)
     event_footer(s, t["accent"], 990)
 
@@ -373,7 +381,7 @@ TEMPLATES = [
     dict(
         slug="06-graduations-best-step", name="AES 2026 – Graduations BEST / STEP (Video Template)",
         accent=GOLD,
-        title_lines=["GRADUA-", "TION"], title_size=190,
+        title_lines=["GRADUATION"], title_size=190,
         subtitle="BEST  |  STEP  ·  Class of 2026",
         bug="GRADUATION  ·  BEST / STEP",
         lt_kicker="CLASS OF 2026", lt_title="Congratulations, graduates!",
@@ -382,7 +390,7 @@ TEMPLATES = [
         card_role="Program: BEST / STEP  ·  Cohort 2026",
         caption="Add a message from a graduate or mentor here.",
         caption_by="— NAME, BEST / STEP GRADUATE",
-        outro_lines=["CONGRATU-", "LATIONS,", "GRADUATES!"], outro_sub="BEST | STEP · Class of 2026",
+        outro_lines=["CONGRATS,", "GRADUATES!"], outro_sub="BEST | STEP · Class of 2026",
     ),
 ]
 
