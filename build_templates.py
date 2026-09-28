@@ -1,4 +1,4 @@
-"""Build the AES 2026 vertical video templates (.pptx) that get imported into Canva.
+"""Build the FOA 2026 vertical video templates (.pptx) that get imported into Canva.
 
 Every template is 1080x1920 (9:16) and follows one structure:
 
@@ -40,37 +40,37 @@ FONT_NAME = "Montserrat"
 
 COPY = {
     "day-1": dict(
-        name="AES 2026 – Day 1", tag="DAY 1",
+        name="FOA 2026 – Day 1", tag="DAY 1",
         lt_kicker="OPENING DAY", lt_title="Add your headline",
         card_kicker="ON STAGE", card_name="Speaker Name", card_role="Title, Organization",
         statement="Add the moment of the day",
     ),
     "job-fair": dict(
-        name="AES 2026 – Job Fair", tag="JOB FAIR",
+        name="FOA 2026 – Job Fair", tag="JOB FAIR",
         lt_kicker="NOW HIRING", lt_title="Add your headline",
         card_kicker="HIRING PARTNER", card_name="Company Name", card_role="Roles: Role 1 · Role 2 · Role 3",
         statement="Bring your CV. Meet the employers",
     ),
     "market-place": dict(
-        name="AES 2026 – Market Place", tag="MARKET PLACE",
+        name="FOA 2026 – Market Place", tag="MARKET PLACE",
         lt_kicker="MADE IN AFRICA", lt_title="Add your headline",
         card_kicker="EXHIBITOR", card_name="Business Name", card_role="What they sell · Booth #00",
         statement="Shop local. Support African brands",
     ),
     "panels": dict(
-        name="AES 2026 – Panels", tag="PANELS",
+        name="FOA 2026 – Panels", tag="PANELS",
         lt_kicker="PANEL", lt_title="Add the panel topic",
         card_kicker="PANELISTS", card_name="Name · Name · Name", card_role="Moderated by Name, Organization",
         statement="Add a key takeaway from the panel",
     ),
     "speakers": dict(
-        name="AES 2026 – Speakers", tag="SPEAKERS",
+        name="FOA 2026 – Speakers", tag="SPEAKERS",
         lt_kicker="KEYNOTE", lt_title="Add the talk title",
         card_kicker="FEATURED SPEAKER", card_name="Dr. Speaker Name", card_role="President & CEO, Organization",
         statement="Add a quote from the speaker",
     ),
     "graduations": dict(
-        name="AES 2026 – Graduations BEST / STEP", tag="GRADUATION · BEST / STEP",
+        name="FOA 2026 – Graduations BEST / STEP", tag="GRADUATION · BEST / STEP",
         lt_kicker="CLASS OF 2026", lt_title="Congrats, graduates",
         card_kicker="BEST GRADUATE", card_name="Graduate Name", card_role="Program: BEST / STEP · Cohort 2026",
         statement="From learning to leading",
@@ -167,7 +167,7 @@ def full_image(slide, path):
 
 def corner_tag(slide, label, accent):
     rect(slide, 60, 90, 22, 22, accent, radius=0.5)
-    text(slide, 96, 84, 800, 40, [("AES 2026  ·  " + label, WHITE)], 26, spacing=3)
+    text(slide, 96, 84, 800, 40, [("FOA 2026  ·  " + label, WHITE)], 26, spacing=3)
 
 
 # ------------------------------------------------------------------ pages
@@ -201,7 +201,7 @@ def page_statement(prs, c, acc, ph):
     s = prs.slides.add_slide(prs.slide_layouts[6])
     full_image(s, ph)
     rect(s, 0, 0, W, 640, WHITE)
-    text(s, 70, 110, 700, 40, [("AES 2026  ·  " + c["tag"], INK)], 26, spacing=3)
+    text(s, 70, 110, 700, 40, [("FOA 2026  ·  " + c["tag"], INK)], 26, spacing=3)
     text(s, 70, 190, 940, 400, [(c["statement"], INK), (".", acc)], 92, line_spacing=0.95)
 
 

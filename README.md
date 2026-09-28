@@ -1,4 +1,4 @@
-# AES 2026 – Video templates (Canva)
+# FOA 2026 – Video templates (Canva)
 
 Vertical (1080×1920, 9:16) video templates for the **16th African Economic Summit**
 (CASA Foundation × Friends of Africa Coalition, 30 Sept – 03 Oct 2026, Metro Toronto

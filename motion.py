@@ -1,4 +1,4 @@
-"""Kinetic-typography motion graphics for the AES 2026 video templates.
+"""Kinetic-typography motion graphics for the FOA 2026 video templates.
 
 Renders, per section, a beat-cut intro (~8 s) and one shared outro (~4.5 s) as
 1080x1920 MP4 files in the style of fast Canva "typography reels": bold words
@@ -340,7 +340,7 @@ def sc_final(lt, dur, s):
     return c
 
 
-def sc_pattern_end(lt, dur, s, word="AES2026", main=("see you", "there")):
+def sc_pattern_end(lt, dur, s, word="FOA2026", main=("see you", "there")):
     c = blank()
     tile = pattern_tile(word, (236, 235, 232))
     k = lt / dur
@@ -373,7 +373,7 @@ def sc_outro_black(lt, dur, s):
         (text_layer("FRIENDS OF AFRICA", 78, WHITE, 800), 500),
         (text_layer(EVENT_DATES, 70, WHITE, 800), H - 470),
         (text_layer("Metro Toronto Convention Centre", 50, (200, 200, 200), 600), H - 380),
-        (text_layer("#AES2026  ·  @friendsofafricafoa", 46, s["accent"], 700), H - 300),
+        (text_layer("#FOA2026  ·  @friendsofafricafoa", 46, s["accent"], 700), H - 300),
     ]
     for i, (layer, y) in enumerate(items):
         k = ease_out((lt - i * 0.08) / 0.25)
