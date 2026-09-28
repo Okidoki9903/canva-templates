@@ -250,8 +250,8 @@ def page_story_editable(prs, key, st, ph):
     msg = "\n".join(st["final"])
     size = 120 if max(len(l) for l in st["final"]) <= 11 else 96
     text(s, 90, 1110, 900, 480, [(msg, INK), (".", acc)], size, line_spacing=0.92)
-    rect(s, 90, 1110 + int(len(st["final"]) * size * 1.02) + 30, 240, 14, acc)
-    text(s, 90, 1110 + int(len(st["final"]) * size * 1.02) + 80, 900, 140,
+    rect(s, 90, 1110 + int(len(st["final"]) * size * 1.22) + 30, 240, 14, acc)
+    text(s, 90, 1110 + int(len(st["final"]) * size * 1.22) + 80, 900, 140,
          [("\n".join(st["info"]), INK)], 44, bold=False)
     text(s, 90, 1810, 900, 40, [("#FOA2026  ·  @friendsofafricafoa", GREY)], 30, bold=False)
 
