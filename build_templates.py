@@ -25,7 +25,7 @@ from pptx.enum.shapes import MSO_SHAPE
 from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
 from pptx.util import Emu, Pt
 
-from motion import FONT, SECTIONS
+from motion import FONT, SECTIONS, STORIES
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 ASSETS = os.path.join(ROOT, "assets")
@@ -240,5 +240,41 @@ def build():
         print("wrote", os.path.relpath(out, ROOT))
 
 
+def page_story_editable(prs, key, st, ph):
+    """Static, fully editable story: photo/video on top, message card below."""
+    acc = hexc(st["accent"])
+    s = prs.slides.add_slide(prs.slide_layouts[6])
+    full_image(s, ph)
+    rect(s, 0, 980, W, 940, WHITE)
+    text(s, 90, 1040, 600, 40, [("FOA 2026", INK), (".", acc)], 34, spacing=2)
+    msg = "\n".join(st["final"])
+    size = 120 if max(len(l) for l in st["final"]) <= 11 else 96
+    text(s, 90, 1110, 900, 480, [(msg, INK), (".", acc)], size, line_spacing=0.92)
+    rect(s, 90, 1110 + int(len(st["final"]) * size * 1.02) + 30, 240, 14, acc)
+    text(s, 90, 1110 + int(len(st["final"]) * size * 1.02) + 80, 900, 140,
+         [("\n".join(st["info"]), INK)], 44, bold=False)
+    text(s, 90, 1810, 900, 40, [("#FOA2026  ·  @friendsofafricafoa", GREY)], 30, bold=False)
+
+
+def build_stories():
+    anim = Presentation()
+    anim.slide_width, anim.slide_height = px(W), px(H)
+    edit = Presentation()
+    edit.slide_width, edit.slide_height = px(W), px(H)
+    for i, (key, st) in enumerate(STORIES.items(), 1):
+        mp4 = os.path.join(MOTION, f"story-{i:02d}-{key}.mp4")
+        png = os.path.join(ASSETS, f"story-{i:02d}-{key}.png")
+        poster(mp4, png)
+        page_motion(anim, mp4, png)
+        ph = os.path.join(ASSETS, f"clip-placeholder-{hexc(st['accent'])}.jpg")
+        if not os.path.exists(ph):
+            make_placeholder(ph, st["accent"])
+        page_story_editable(edit, key, st, ph)
+    for prs, name in ((anim, "07-stories-animated.pptx"), (edit, "08-stories-editable.pptx")):
+        prs.save(os.path.join(OUT, name))
+        print("wrote templates/" + name)
+
+
 if __name__ == "__main__":
     build()
+    build_stories()

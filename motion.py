@@ -53,12 +53,12 @@ SECTIONS = {
         stack=["THE", "PANELS"], final=["PANEL", "TALKS"],
     ),
     "speakers": dict(
-        accent=(227, 165, 59), w1="Voices", w2="That lead", flash="HEAR",
+        accent=(22, 72, 196), w1="Voices", w2="That lead", flash="HEAR",
         scroll=("ON STAGE", "SPEAKERS"), circle=["leaders", "who", "shape", "Africa"],
         stack=["ON", "STAGE"], final=["THE", "SPEAKERS"],
     ),
     "graduations": dict(
-        accent=(123, 63, 228), w1="Class", w2="Of 2026", flash="GRAD",
+        accent=(247, 186, 0), on=INK, w1="Class", w2="Of 2026", flash="GRAD",
         scroll=("BEST  ×  STEP", "GRADUATION"), circle=["from", "learning", "to", "leading"],
         stack=["BEST", "STEP"], final=["CLASS", "OF 2026"],
     ),
@@ -205,12 +205,13 @@ def pattern_tile(word, color):
 def sc_hello(lt, dur, s):
     c = blank()
     x0, y = 150, 760
-    paste(c, text_layer(s["w1"], 118, INK, 800, s["accent"]), x0, y, "lm", scale=pop(lt))
+    size = fit([s["w1"] + ". ", s["w2"] + ". "], 118, width=820)
+    paste(c, text_layer(s["w1"], size, INK, 800, s["accent"]), x0, y, "lm", scale=pop(lt))
     if lt > dur * 0.5:
         k = (lt - dur * 0.5) / (dur * 0.45)
         full = s["w2"]
         shown = full[: max(1, int(len(full) * min(k, 1) + 0.999))]
-        paste(c, text_layer(shown, 118, INK, 800, s["accent"] if len(shown) == len(full) else None),
+        paste(c, text_layer(shown, size, INK, 800, s["accent"] if len(shown) == len(full) else None),
               x0, y + 150, "lm")
     return c
 
@@ -223,22 +224,24 @@ def sc_split(lt, dur, s):
         c.alpha_composite(dim)
         return c
     c = blank(INK)
-    paste(c, text_layer(s["w1"], 104, WHITE, 800, s["accent"]), 120, 230, "lm")
+    size = fit([s["w1"] + ". ", s["w2"] + ". "], 104, width=840)
+    paste(c, text_layer(s["w1"], size, WHITE, 800, s["accent"]), 120, 230, "lm")
     shift = int(60 * (1 - ease_out((lt - 0.12) / 0.2)))
-    paste(c, text_layer(s["w2"], 104, WHITE, 800, s["accent"]), 120 - shift, H - 260, "lm")
+    paste(c, text_layer(s["w2"], size, WHITE, 800, s["accent"]), 120 - shift, H - 260, "lm")
     return c
 
 
 def sc_flash_word(lt, dur, s):
     c = blank()
-    paste(c, text_layer(s["flash"], 230, s["accent"], 900), W / 2, H / 2, scale=pop(lt, 0.14))
+    size = fit([s["flash"]], 230, width=900)
+    paste(c, text_layer(s["flash"], size, s["accent"], 900), W / 2, H / 2, scale=pop(lt, 0.14))
     return c
 
 
 def sc_spin(lt, dur, s):
     c = brush_bg(s["accent"]).copy()
     k = ease_in_out(lt / dur)
-    paste(c, text_layer(s["flash"], 150, WHITE, 900), W / 2 + 40 * k, H / 2 + 60 * k,
+    paste(c, text_layer(s["flash"], 150, s.get("on", WHITE), 900), W / 2 + 40 * k, H / 2 + 60 * k,
           scale=1.0 - 0.35 * k, rot=-60 * k)
     return c
 
@@ -247,14 +250,15 @@ def sc_columns(lt, dur, s):
     c = brush_bg(s["accent"]).copy()
     k = lt / dur
     a, b = s["scroll"]
-    la = text_layer((a + "   ") * 3, 300, WHITE, 900).rotate(-90, expand=True)
-    lb = text_layer((b + "   ") * 3, 300, WHITE, 900).rotate(90, expand=True)
+    on = s.get("on", WHITE)
+    la = text_layer((a + "   ") * 3, 300, on, 900).rotate(-90, expand=True)
+    lb = text_layer((b + "   ") * 3, 300, on, 900).rotate(90, expand=True)
     span = la.height - H
     c.alpha_composite(la, (W - la.width + 20, int(-span * (0.15 + 0.5 * k))))
     span_b = lb.height - H
     c.alpha_composite(lb, (-20, int(-span_b * (0.65 - 0.5 * k))))
     # white bar peeking at the bottom like the reference
-    ImageDraw.Draw(c).rectangle((0, H - 60, int(W * 0.25 * (1 - k)), H - 30), fill=WHITE)
+    ImageDraw.Draw(c).rectangle((0, H - 60, int(W * 0.25 * (1 - k)), H - 30), fill=s.get("on", WHITE))
     return c
 
 
@@ -291,7 +295,7 @@ def sc_stack_ink(lt, dur, s):
     c = blank()
     lines = s["stack"]
     size = fit(lines, 250)
-    soft = tuple(int(v * 0.75 + 255 * 0.25) for v in s["accent"])
+    soft = s["accent"] if "on" in s else tuple(int(v * 0.75 + 255 * 0.25) for v in s["accent"])
     y0 = 560
     for i, ln in enumerate(lines):
         if lt > i * 0.12:
@@ -386,6 +390,32 @@ def sc_outro_black(lt, dur, s):
     return c
 
 
+def sc_story_final(lt, dur, s):
+    """Final card of a story: big message + info line, held long enough to read."""
+    c = blank()
+    paste(c, text_layer("FOA 2026", 40, INK, 800, s["accent"]), 120, 200, "lm")
+    lines = s["final"]
+    size = fit([l + ". " for l in lines], 210)
+    y0 = H / 2 - size * 0.5 * (len(lines) - 1) - 120
+    for i, ln in enumerate(lines):
+        k = ease_out((lt - i * 0.1) / 0.2)
+        if k <= 0:
+            continue
+        last = i == len(lines) - 1
+        dot = s["accent"] if (last and lt > 0.5) else None
+        paste(c, text_layer(ln, size, INK, 900, dot), 120 - 60 * (1 - k), y0 + i * size, "lm", alpha=k)
+    y = y0 + len(lines) * size + 30
+    if lt > 0.6:
+        bw = int(300 * ease_out((lt - 0.6) / 0.3))
+        ImageDraw.Draw(c).rectangle((120, y, 120 + bw, y + 14), fill=s["accent"])
+    for j, line in enumerate(s["info"]):
+        k = ease_out((lt - 0.8 - j * 0.1) / 0.25)
+        if k > 0:
+            paste(c, text_layer(line, 46, INK, 600), 120, y + 80 + j * 64, "lm", alpha=k)
+    paste(c, text_layer("#FOA2026  ·  @friendsofafricafoa", 36, (110, 110, 110), 600), 120, H - 180, "lm")
+    return c
+
+
 # ------------------------------------------------------------------ timelines
 
 def intro_timeline():
@@ -401,6 +431,44 @@ def outro_timeline():
     return [
         (1.2, sc_outro_thanks), (1.6, sc_outro_black), (1.8, sc_pattern_end),
     ]
+
+
+def story_timeline():
+    return [
+        (1.2, sc_hello), (0.6, sc_split), (0.5, sc_flash_word), (0.5, sc_spin),
+        (1.3, sc_columns), (3.4, sc_story_final),
+    ]
+
+
+ORANGE, BLUE, YELLOW, GREEN = (242, 84, 45), (22, 72, 196), (247, 186, 0), (31, 163, 74)
+VENUE = ["Metro Toronto Convention Centre", "30 Sept – 03 Oct 2026"]
+
+STORIES = {
+    "welcome": dict(accent=ORANGE, w1="Hello", w2="Welcome", flash="WELCOME",
+                    scroll=("FRIENDS OF AFRICA", "FOA 2026"), final=["WELCOME", "TO FOA 2026"],
+                    info=["16th African Economic Summit", "Metro Toronto Convention Centre"]),
+    "registration": dict(accent=BLUE, w1="Hello", w2="Check in", flash="OPEN",
+                         scroll=("REGISTRATION", "CHECK IN"), final=["REGISTRATION", "IS OPEN"],
+                         info=["Grab your badge", "and come on in"]),
+    "waiting-for-you": dict(accent=YELLOW, on=INK, w1="Ready", w2="Are you", flash="YOU",
+                            scroll=("WE'RE WAITING", "FOR YOU"), final=["WE'RE", "WAITING", "FOR YOU"],
+                            info=VENUE),
+    "panel-started": dict(accent=BLUE, w1="Shh", w2="It's live", flash="LIVE",
+                          scroll=("PANEL", "STARTED"), final=["THE PANEL", "HAS STARTED"],
+                          info=["Add the panel topic here", "Join us now"]),
+    "visit-market-place": dict(accent=ORANGE, w1="Hey", w2="Come visit", flash="SHOP",
+                               scroll=("MARKET PLACE", "COME VISIT"), final=["COME VISIT", "THE MARKET", "PLACE"],
+                               info=["Local brands", "Made in Africa"]),
+    "job-fair-open": dict(accent=GREEN, w1="Hey", w2="Job hunting", flash="HIRED",
+                          scroll=("JOB FAIR", "NOW OPEN"), final=["THE JOB FAIR", "IS OPEN"],
+                          info=["Bring your CV", "Meet the employers"]),
+    "starting-soon": dict(accent=YELLOW, on=INK, w1="Almost", w2="Time", flash="SOON",
+                          scroll=("STARTING SOON", "STAY TUNED"), final=["STARTING", "SOON"],
+                          info=["Take your seat", "We begin in a few minutes"]),
+    "see-you-tomorrow": dict(accent=BLUE, w1="Day done", w2="Thank you", flash="THANKS",
+                             scroll=("THANK YOU", "SEE YOU TOMORROW"), final=["SEE YOU", "TOMORROW"],
+                             info=VENUE),
+}
 
 
 def render(timeline, s, path):
@@ -438,6 +506,10 @@ def main():
         s = SECTIONS[key]
         render(intro_timeline(), s, os.path.join(OUT, f"{i:02d}-{key}-intro.mp4"))
         render(outro_timeline(), s, os.path.join(OUT, f"{i:02d}-{key}-outro.mp4"))
+    for i, key in enumerate(STORIES, 1):
+        if key not in only and sys.argv[1:] != ["stories"] and sys.argv[1:]:
+            continue
+        render(story_timeline(), STORIES[key], os.path.join(OUT, f"story-{i:02d}-{key}.mp4"))
 
 
 if __name__ == "__main__":
